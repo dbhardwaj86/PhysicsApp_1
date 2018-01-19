@@ -2,10 +2,14 @@ package com.example.deepak.physicsapp_1;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -14,6 +18,7 @@ public class AddDoubtActivity extends AppCompatActivity {
 
     private EditText mEditText;
     private DatabaseReference mDatabaseReference;
+    private RecyclerView mRecyclerView;
 
 
 
@@ -24,16 +29,55 @@ public class AddDoubtActivity extends AppCompatActivity {
 
         mEditText = (EditText)findViewById(R.id.editText);
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("message");
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("message2");
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.messageRec);
+
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
+
 
     }
+    @Override
+    protected void onStart(){
+        super.onStart();
+        FirebaseRecyclerAdapter <MessageModel, MessageViewHolder> FBRA = new FirebaseRecyclerAdapter<MessageModel, MessageViewHolder>(
+                MessageModel.class,
+                R.layout.messagetextlayout,
+                MessageViewHolder.class,
+                mDatabaseReference
+        ) {
+            @Override
+            protected void populateViewHolder(MessageViewHolder viewHolder, MessageModel model, int position) {
+                viewHolder.setContent(model.getContent());
+            }
+        };
+        mRecyclerView.setAdapter(FBRA);
+
+    }
+
 
     public void sendButtonClicked (View view){
         final String messageValue = mEditText.getText().toString().trim();
         if(!TextUtils.isEmpty(messageValue)){
             final DatabaseReference newpost = mDatabaseReference.push();
-            newpost.child("content2").setValue(messageValue);
+            newpost.child("content").setValue(messageValue);
         }
 
+    }
+
+    public static class MessageViewHolder extends RecyclerView.ViewHolder{
+
+        View mView;
+        public MessageViewHolder(View itemView) {
+            super(itemView);
+            mView = itemView;
+        }
+        public void setContent (String s){
+            TextView mContent = (TextView) mView.findViewById(R.id.messagetext);
+            mContent.setText(s);
+        }
     }
 }
