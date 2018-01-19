@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PhysicsApp_1</string>
+    <string name="title_main">Ask Doubts</string>
+    <string name="title_left">Lectures</string>
+    <string name="title_middle">Previous Doubts</string>
+    <string name="title_right">One-on-One</string>
+    <string name="button_to_ask_doubts">Button to ask doubts</string>
+</resources>
