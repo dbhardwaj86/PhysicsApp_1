@@ -1,5 +1,6 @@
 package com.example.deepak.physicsapp_1;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,8 @@ public class AskDoubtsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("PApp","Add Doubt clicked");
+                Intent myIntent = new Intent(AskDoubtsActivity.this, AddDoubtActivity.class);
+                startActivity(myIntent);
             }
         });
         mLeftDoubt.setOnClickListener(new View.OnClickListener() {
