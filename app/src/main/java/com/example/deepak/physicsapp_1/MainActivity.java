@@ -1,6 +1,7 @@
 package com.example.deepak.physicsapp_1;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String CHANNEL_URL = "http://www.youtube.com/user/JustinBieberVEVO";
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -21,8 +23,12 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_lectures:
                     Log.d("PApp", "Lectures pressed");
-                    Intent lectureIntent = new Intent(MainActivity.this, LectureActivity.class);
-                    startActivity(lectureIntent);
+                    //Intent lectureIntent = new Intent(MainActivity.this, LectureActivity.class);
+                    //startActivity(lectureIntent);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(CHANNEL_URL));
+                    startActivity(intent);
+
                     return true;
                 case R.id.navigation_previous_doubts:
                     Log.d("PApp", "Previous Doubts pressed");
