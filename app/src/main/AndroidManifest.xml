@@ -20,11 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LectureActivity" />
+
         <activity android:name=".PreviousDoubtsActivity" />
         <activity android:name=".OneonOneActivity" />
         <activity android:name=".AskDoubtsActivity" />
-        <activity android:name=".AddDoubtActivity"></activity>
+        <activity android:name=".AddDoubtActivity" />
+        <activity android:name=".SigninActivity" />
+        <activity android:name=".RegisterActivity"></activity>
     </application>
 
 </manifest>

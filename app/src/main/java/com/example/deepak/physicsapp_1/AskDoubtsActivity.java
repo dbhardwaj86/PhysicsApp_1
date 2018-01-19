@@ -18,6 +18,9 @@ public class AskDoubtsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        Intent myIntent = new Intent(getApplicationContext(), SigninActivity.class);
+        startActivity(myIntent);
+
         setContentView(R.layout.activity_ask_doubts);
         Log.d("PApp", "Ask Doubts activity started");
 
