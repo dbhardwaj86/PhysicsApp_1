@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
         Button mRegisterButton = (Button) findViewById(R.id.btnRegister);
 
         name = (EditText) findViewById(R.id.reg_fullname);
-        email =(EditText) findViewById(R.id.reg_email);
+        email = (EditText) findViewById(R.id.reg_email);
         password = (EditText) findViewById(R.id.reg_password);
 
         mAuth = FirebaseAuth.getInstance();
@@ -48,44 +49,45 @@ public class RegisterActivity extends AppCompatActivity {
                 finish();
             }
         });
-        // Listening to Login Screen link
+
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View arg0) {
+            public void onClick(View v) {
                 final String name_content, email_content, password_content;
                 name_content = name.getText().toString();
                 email_content = email.getText().toString();
                 password_content = password.getText().toString();
 
                 Log.d("PApp", "Register clicked");
-                if(TextUtils.isEmpty(name_content))
-                    Log.d("PApp", "name empty");
-                if(TextUtils.isEmpty(email_content))
-                    Log.d("PApp", "email empty");
-                if(TextUtils.isEmpty(password_content))
-                    Log.d("PApp", "password empty");
-                if(!TextUtils.isEmpty(name_content) && !TextUtils.isEmpty(email_content) && !TextUtils.isEmpty(password_content)){
-                    Log.d("PApp", "going to create user");
-                    mAuth.createUserWithEmailAndPassword(email_content, password_content).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                Log.d("PApp", "Registration successful");
-                            String user_id = mAuth.getCurrentUser().getUid();
-                            DatabaseReference current_DB = mDatabaseReference.child(user_id);
-                            current_DB.child("Name").setValue(name_content);
-                            startActivity(new Intent(RegisterActivity.this, SigninActivity.class));
+                mAuth.createUserWithEmailAndPassword(email_content, password_content)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if(task.isSuccessful()){
+                                    Log.d("PApp", "Registration successful");
+                                    String user_id = mAuth.getCurrentUser().getUid();
+                                    DatabaseReference current_DB = mDatabaseReference.child(user_id);
+                                    current_DB.child("Name").setValue(name_content);
+                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
 
-                            }else
-                            {
-                                Toast.makeText(getApplicationContext(), "create failed", Toast.LENGTH_SHORT).show();
+                                }else
+                                {
+                                    Toast.makeText(getApplicationContext(), "create failed", Toast.LENGTH_SHORT).show();
+                                }
                             }
+                        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("PApp", " "+e.getMessage());
+                    }
+                });
 
-                        }
-                    });
-                }
+
 
             }
         });
+
+
     }
 }
