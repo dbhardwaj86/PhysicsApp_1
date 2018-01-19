@@ -5,4 +5,8 @@
     <string name="title_middle">Previous Doubts</string>
     <string name="title_right">One-on-One</string>
     <string name="button_to_ask_doubts">Button to ask doubts</string>
+    <string name="player_error">Error initializing YouTube player: %s</string>
+    <string name="seek_to">Jump To</string>
+    <string name="seek_to_hint">Seconds</string>
+
 </resources>

@@ -25,6 +25,10 @@
         style="@style/Widget.AppCompat.Light.ActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         android:contentDescription="@string/button_to_ask_doubts"
         android:defaultFocusHighlightEnabled="?android:attr/windowSwipeToDismiss"
@@ -32,20 +36,28 @@
         android:shadowColor="@color/colorPrimaryDark"
         android:text="@string/title_main"
         android:textColor="@android:color/background_light"
-        tools:layout_editor_absoluteX="135dp"
-        tools:layout_editor_absoluteY="231dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:textColorHighlight="@android:color/black" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:adjustViewBounds="false"
         android:cropToPadding="false"
         android:scaleType="fitXY"
         android:visibility="visible"
-        app:srcCompat="@drawable/icons8_decision_96"
-        tools:layout_editor_absoluteX="135dp"
-        tools:layout_editor_absoluteY="97dp" />
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icons8_decision_96" />
 
 </android.support.constraint.ConstraintLayout>
