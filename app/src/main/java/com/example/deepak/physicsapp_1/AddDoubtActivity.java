@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ public class AddDoubtActivity extends AppCompatActivity {
     }
     @Override
     protected void onStart(){
+        Log.d("PApp", "Entered onStart for addDoubts");
         super.onStart();
         FirebaseRecyclerAdapter <MessageModel, MessageViewHolder> FBRA = new FirebaseRecyclerAdapter<MessageModel, MessageViewHolder>(
                 MessageModel.class,
@@ -51,16 +53,24 @@ public class AddDoubtActivity extends AppCompatActivity {
         ) {
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder, MessageModel model, int position) {
+                Log.d("PApp", "inside populate view");
                 viewHolder.setContent(model.getContent());
             }
         };
         mRecyclerView.setAdapter(FBRA);
 
     }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Log.d("PApp", "onResume called");
+    }
+
 
 
     public void sendButtonClicked (View view){
         final String messageValue = mEditText.getText().toString().trim();
+        Log.d("PApp", "Entered sendButtonClicked");
         if(!TextUtils.isEmpty(messageValue)){
             final DatabaseReference newpost = mDatabaseReference.push();
             newpost.child("content").setValue(messageValue);
