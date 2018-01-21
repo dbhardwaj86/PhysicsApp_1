@@ -1,8 +1,11 @@
 package com.example.deepak.physicsapp_1;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +38,7 @@ public class AttachActivity extends AppCompatActivity {
     private FirebaseUser user;
     private static final String TAG = "AttachActivity";
     private FirebaseStorage storage;
-
+    private static int READ_REQ_CODE = 42;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,23 +52,21 @@ public class AttachActivity extends AppCompatActivity {
 //            startActivity(i);
 //        }
 
-        storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReferenceFromUrl("gs://physicsapp1-7f596.appspot.com").child("test2.txt");
 
-        File file = null;
-        try {
-            file = File.createTempFile("test2", "txt");
-        } catch( IOException e ) {
 
-        }
-        UploadTask uploadTask = storageReference.putFile(Uri.fromFile(file));
-        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if(!task.isSuccessful())
-                    Log.d("PApp", "Can't upload");
-            }
-        });
+       // File file = null;
+//        try {
+//            file = File.createTempFile("test2", "txt");
+//        } catch( IOException e ) {
+//
+//        }
+        Intent myIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        myIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        myIntent.setType("*/*");
+        startActivityForResult(myIntent, READ_REQ_CODE);
+
+
+
 
 
 //        if (ContextCompat.checkSelfPermission(this,
@@ -77,6 +79,49 @@ public class AttachActivity extends AppCompatActivity {
 //                    1);
 //
 //        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData){
+        if (requestCode == READ_REQ_CODE && resultCode == Activity.RESULT_OK) {
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.
+            // Pull that URI using resultData.getData().
+
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                Log.d("PApp", "Uri: " + uri.toString());
+
+
+                Cursor cursor = this.getContentResolver()
+                        .query(uri, null, null, null, null, null);
+
+                assert cursor != null;
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                cursor.moveToFirst();
+                String name = cursor.getString(nameIndex);
+                cursor.close();
+
+                storage = FirebaseStorage.getInstance();
+                StorageReference storageReference = storage.getReferenceFromUrl("gs://physicsapp1-7f596.appspot.com").child(name);
+
+                UploadTask uploadTask = storageReference.putFile(uri);
+                uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if(!task.isSuccessful())
+                            Log.d("PApp", "Can't upload");
+                    }
+
+                });
+
+
+                //showImage(uri);
+            }
+        }
     }
 
 }
