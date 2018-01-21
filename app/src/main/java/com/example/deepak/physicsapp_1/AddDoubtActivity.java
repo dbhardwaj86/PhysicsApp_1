@@ -1,5 +1,6 @@
 package com.example.deepak.physicsapp_1;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -34,6 +35,7 @@ public class AddDoubtActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ImageView mImageView;
     FirebaseStorage mStorage;
+    private ImageView mAttachImage;
     //StorageReference storageRef = storage.getReferenceFromUrl("gs://physicsapp1-7f596.appspot.com").child("icons8-more-96.png");
 
 
@@ -44,7 +46,9 @@ public class AddDoubtActivity extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance();
         StorageReference storageRef = mStorage.getReferenceFromUrl("gs://physicsapp1-7f596.appspot.com").child("icons8-more-96.png");
         mImageView = (ImageView) findViewById(R.id.image);
-        
+        mAttachImage = (ImageView) findViewById(R.id.attach_button);
+        mAttachImage.setImageResource(R.drawable.ic_action_name);
+
         try {
             final File localFile = File.createTempFile("image", "jpg");
             Log.d("PApp", "Local file created");
@@ -78,6 +82,15 @@ public class AddDoubtActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
+
+        mAttachImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("PApp", "Attach button clicked");
+                Intent attachIntent = new Intent(AddDoubtActivity.this, AttachActivity.class);
+                startActivity(attachIntent);
+            }
+        });
 
 
     }

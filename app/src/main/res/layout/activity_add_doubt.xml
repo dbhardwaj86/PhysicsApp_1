@@ -27,15 +27,21 @@
         android:layout_alignParentBottom="true">
 
         <EditText
-            android:layout_width="300dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:id="@+id/editText"/>
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:id="@+id/attach_button"
+            />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SEND"
             android:id="@+id/sendButton"
             android:onClick="sendButtonClicked"/>
+
     </LinearLayout>
 
 </RelativeLayout>
