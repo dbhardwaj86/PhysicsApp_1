@@ -1,49 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/messagetextlayout"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
-    android:layout_margin="10dp"
+    android:layout_height="150dp"
     android:background="@drawable/messagetextbox"
-    android:id="@+id/messagetextlayout">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        android:text="Deepak"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:id="@+id/usernametext"
-        android:padding="5dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:id="@+id/messagetext"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        android:text="Hello Friends"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="15dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/timestamp"
-        android:textColor="#000000"
-        android:text="9:15 PM"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="5dp"
-        />
-    <ImageView
-        android:id="@+id/msgimage"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="5dp"
-        android:src="@drawable/ic_video_library_black_24dp"/>
 
-</LinearLayout>
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/usernametext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:layout_margin="10dp"
+                android:text="Deepak" />
+
+            <TextView
+                android:id="@+id/messagetext"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:layout_marginLeft="15dp"
+                android:text="Hi There" />
+
+            <TextView
+                android:id="@+id/timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:text="9:15 PM" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/msgimage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            app:srcCompat="@drawable/common_full_open_on_phone" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -10,6 +10,8 @@ import android.widget.ImageView;
 
 public class AskDoubtsActivity extends AppCompatActivity {
 
+    private final String TAG = "PApp AskDoubtsActivity";
+
     private ImageButton mAddDoubt;
     private ImageButton mLeftDoubt;
     private ImageButton mRightDoubt;
@@ -18,11 +20,12 @@ public class AskDoubtsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         Intent myIntent = new Intent(getApplicationContext(), SigninActivity.class);
         startActivity(myIntent);
 
         setContentView(R.layout.activity_ask_doubts);
-        Log.d("PApp", "Ask Doubts activity started");
+        Log.d(TAG, "Ask Doubts activity started");
 
         mAddDoubt = (ImageButton)findViewById(R.id.add_button);
         mLeftDoubt = (ImageButton) findViewById(R.id.left_doubt);
@@ -31,7 +34,7 @@ public class AskDoubtsActivity extends AppCompatActivity {
         mAddDoubt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("PApp","Add Doubt clicked");
+                Log.d(TAG,"Add Doubt clicked");
                 Intent myIntent = new Intent(AskDoubtsActivity.this, AddDoubtActivity.class);
                 startActivity(myIntent);
             }
@@ -39,13 +42,13 @@ public class AskDoubtsActivity extends AppCompatActivity {
         mLeftDoubt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("PApp","Left Doubt clicked");
+                Log.d(TAG,"Left Doubt clicked");
             }
         });
         mRightDoubt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("PApp","Right Doubt clicked");
+                Log.d(TAG,"Right Doubt clicked");
             }
         });
 

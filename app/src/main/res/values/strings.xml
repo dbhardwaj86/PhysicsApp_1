@@ -9,5 +9,6 @@
     <string name="seek_to">Jump To</string>
     <string name="seek_to_hint">Seconds</string>
     <string name="YTkey">AIzaSyB_92jyeowh0rW8aazzAi1ORTYsoKYk3JA</string>
+    <string name="YTchannel">https://www.youtube.com/channel/UCQyL8MrTRYVsa24awdkekJA</string>
 
 </resources>

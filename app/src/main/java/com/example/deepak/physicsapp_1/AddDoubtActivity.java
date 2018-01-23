@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -40,17 +41,19 @@ import java.io.IOException;
 
 public class AddDoubtActivity extends AppCompatActivity {
 
+    private static int READ_REQ_CODE = 42;
+    private static final String TAG = "PApp AddDoubtActivity";
+
     private EditText mEditText;
     private DatabaseReference mDatabaseReference;
     private RecyclerView mRecyclerView;
     private ImageView mImageView;
     FirebaseStorage mStorage;
     private ImageView mAttachImage;
-    //StorageReference storageRef = storage.getReferenceFromUrl("gs://physicsapp1-7f596.appspot.com").child("icons8-more-96.png");
-    private FirebaseUser user;
-    private static final String TAG = "AddDoubtActivity";
-    private FirebaseStorage storage;
-    private static int READ_REQ_CODE = 42;
+    private FirebaseUser mFirebaseUser;
+
+    private FirebaseStorage mFirebaseStorage;
+
     private boolean mFileToBeAttached;
     private String mAttachedFileName;
     private Uri mUri;
@@ -66,30 +69,31 @@ public class AddDoubtActivity extends AppCompatActivity {
         mAttachImage.setImageResource(R.drawable.ic_action_name);
         MessageModel mMessageModel;
 
-        try {
-            final File localFile = File.createTempFile("image", "jpg");
-            Log.d("PApp", "Local file created");
-            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Log.d("PApp", localFile.getAbsolutePath());
-
-                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    if(bitmap != null)
-                        mImageView.setImageBitmap(bitmap);
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                }
-            });
-        } catch (IOException e ) {}
+//        try {
+//            final File localFile = File.createTempFile("image", "jpg");
+//            Log.d(TAG, "Local file created");
+//            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                    Log.d(TAG, localFile.getAbsolutePath());
+//
+//                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                    if(bitmap != null)
+//                        mImageView.setImageBitmap(bitmap);
+//
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception exception) {
+//                }
+//            });
+//        } catch (IOException e ) {}
 
 
 
 
         mEditText = (EditText)findViewById(R.id.editText);
+
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("message");
 
         mRecyclerView = (RecyclerView) findViewById(R.id.messageRec);
@@ -98,18 +102,13 @@ public class AddDoubtActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        //mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-        //childRef = mDatabaseRef.child("recipes");
         MessageAdapter mMessageAdapter = new MessageAdapter(MessageModel.class, R.layout.messagetextlayout, MessageHolder.class, mDatabaseReference, getApplicationContext());
-        //recipeRecyclerview.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mMessageAdapter);
 
         mAttachImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("PApp", "Attach button clicked");
-//                Intent attachIntent = new Intent(AddDoubtActivity.this, AttachActivity.class);
-//                startActivity(attachIntent);
+                Log.d(TAG, "Attach button clicked");
                 Intent myIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 myIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 myIntent.setType("*/*");
@@ -121,27 +120,13 @@ public class AddDoubtActivity extends AppCompatActivity {
     }
     @Override
     protected void onStart(){
-        Log.d("PApp", "Entered onStart for addDoubts");
+        Log.d(TAG, "Entered onStart for addDoubts");
         super.onStart();
-//        FirebaseRecyclerAdapter <MessageModel, MessageViewHolder> FBRA = new FirebaseRecyclerAdapter<MessageModel, MessageViewHolder>(
-//                MessageModel.class,
-//                R.layout.messagetextlayout,
-//                MessageViewHolder.class,
-//                mDatabaseReference
-//        ) {
-//            @Override
-//            protected void populateViewHolder(MessageViewHolder viewHolder, MessageModel model, int position) {
-//                Log.d("PApp", "inside populate view");
-//                viewHolder.setContent(model.getContent(), model.getFile());
-//            }
-//        };
-//        mRecyclerView.setAdapter(FBRA);
-
     }
     @Override
     protected void onResume(){
         super.onResume();
-        Log.d("PApp", "onResume called");
+        Log.d(TAG, "onResume called");
     }
 
 
@@ -157,7 +142,7 @@ public class AddDoubtActivity extends AppCompatActivity {
             mUri = null;
             if (resultData != null) {
                 mUri = resultData.getData();
-                Log.d("PApp", "Uri: " + mUri.toString());
+                Log.d(TAG, "Uri: " + mUri.toString());
 
 
                 Cursor cursor = this.getContentResolver()
@@ -169,60 +154,43 @@ public class AddDoubtActivity extends AppCompatActivity {
                 mAttachedFileName = cursor.getString(nameIndex);
                 cursor.close();
                 mFileToBeAttached = true;
-
-
-
-
-                //showImage(uri);
             }
         }
     }
     public void sendButtonClicked (View view){
         final String messageValue = mEditText.getText().toString().trim();
-        Log.d("PApp", "Entered sendButtonClicked");
+        Log.d(TAG, "Entered sendButtonClicked");
+        final DatabaseReference newpost = mDatabaseReference.push();
+
         if(!TextUtils.isEmpty(messageValue)){
-            final DatabaseReference newpost = mDatabaseReference.push();
             newpost.child("content").setValue(messageValue);
-            if(mFileToBeAttached){
-                mFileToBeAttached = false;
-                storage = FirebaseStorage.getInstance();
-                StorageReference storageReference = storage.getReferenceFromUrl("gs://physicsapp1-7f596.appspot.com").child(mAttachedFileName);
 
-                UploadTask uploadTask = storageReference.putFile(mUri);
-                uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if(!task.isSuccessful())
-                            Log.d("PApp", "Can't upload");
-                    }
-
-                });
-            }
         }
+        if(mFileToBeAttached){
+            mFileToBeAttached = false;
+            mStorage = FirebaseStorage.getInstance();
+            StorageReference storageReference = mStorage.getReferenceFromUrl("gs://physicsapp1-7f596.appspot.com").child(mAttachedFileName);
 
-    }
+            UploadTask uploadTask = storageReference.putFile(mUri);
+            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if(!task.isSuccessful())
+                        Log.d(TAG, "Can't upload");
 
-    public static class MessageViewHolder extends RecyclerView.ViewHolder{
+                }
 
-        View mView;
-        public MessageViewHolder(View itemView) {
-            super(itemView);
-            mView = itemView;
-        }
-        public void setContent (String s, File file){
-            ImageView mImage = (ImageView) mView.findViewById(R.id.msgimage);
-            TextView mContent = (TextView) mView.findViewById(R.id.messagetext);
-            mContent.setText(s);
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            if(bitmap != null)
-                mImage.setImageBitmap(bitmap);
-
+            });
+            mStorage.getReference().child(mAttachedFileName).getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+                @Override
+                public void onSuccess(StorageMetadata storageMetadata) {
+                    Uri downloadUri = storageMetadata.getDownloadUrl();
+                    String generatedFilePath = downloadUri.toString();
+                    newpost.child("imageUrl").setValue(generatedFilePath);
+                }
+            });
         }
     }
-
-
-
-
 }
 
 

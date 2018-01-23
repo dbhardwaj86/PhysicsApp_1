@@ -13,8 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    //final variables
+    private String CHANNEL_URL;
+    private final String TAG = "PApp MainActivity";
 
-    private static final String CHANNEL_URL = "http://www.youtube.com/user/JustinBieberVEVO";
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -22,21 +24,18 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_lectures:
-                    Log.d("PApp", "Lectures pressed");
-                    //Intent lectureIntent = new Intent(MainActivity.this, LectureActivity.class);
-                    //startActivity(lectureIntent);
+                    Log.d(TAG, "Lectures pressed");
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(CHANNEL_URL));
                     startActivity(intent);
-
                     return true;
                 case R.id.navigation_previous_doubts:
-                    Log.d("PApp", "Previous Doubts pressed");
+                    Log.d(TAG, "Previous Doubts pressed");
                     Intent pDoubtIntent = new Intent(MainActivity.this, PreviousDoubtsActivity.class);
                     startActivity(pDoubtIntent);
                     return true;
                 case R.id.navigation_one_on_one:
-                    Log.d("PApp", "One-on-One pressed");
+                    Log.d(TAG, "One-on-One pressed");
                     Intent oneOnOneIntent = new Intent(MainActivity.this, OneonOneActivity.class);
                     startActivity(oneOnOneIntent);
                     return true;
@@ -46,22 +45,26 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private Button mAskDoubtButton;
-
+    private BottomNavigationView mBottomNavigationView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        CHANNEL_URL = this.getResources().getString(R.string.YTchannel);
+
         mAskDoubtButton = (Button) findViewById(R.id.button);
         mAskDoubtButton.setText(R.string.title_main);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mBottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         mAskDoubtButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("PApp", "Ask Doubts pressed");
+                Log.d(TAG, "Ask Doubts pressed");
                 Intent askDoubtsIntent = new Intent(MainActivity.this, AskDoubtsActivity.class);
                 startActivity(askDoubtsIntent);
             }
