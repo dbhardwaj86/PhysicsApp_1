@@ -106,13 +106,13 @@ public class SigninActivity extends AppCompatActivity {
 
     public void updateUI(FirebaseUser user){
         if(!(user == null)) {
-            FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Name").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     try {
                         if (snapshot.getValue() != null) {
                             try {
-                                Log.d("PApp", "" + snapshot.getValue()); // your name values you will get here
+                                Log.d("PApp", "" + snapshot.getValue().toString().trim()); // your name values you will get here
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
