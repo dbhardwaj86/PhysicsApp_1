@@ -2,6 +2,7 @@ package com.example.deepak.physicsapp_1;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +19,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SigninActivity extends AppCompatActivity {
     private TextView mRegisterScreen;
@@ -66,7 +71,10 @@ public class SigninActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("PApp", "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    Intent askDoubtIntent = new Intent(SigninActivity.this, AskDoubtsActivity.class);
                                     updateUI(user);
+                                    startActivity(askDoubtIntent);
+                                    finish();
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("PApp", "signInWithEmail:failure", task.getException());
@@ -97,7 +105,31 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     public void updateUI(FirebaseUser user){
-        if(!(user == null))
-        Log.d("PApp", "Updating UI for "+user.getDisplayName());
+        if(!(user == null)) {
+            FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    try {
+                        if (snapshot.getValue() != null) {
+                            try {
+                                Log.d("PApp", "" + snapshot.getValue()); // your name values you will get here
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Log.e("TAG", " it's null.");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError firebaseError) {
+                    Log.e("onCancelled", " cancelled");
+                }
+            });
+
+            }
     }
 }

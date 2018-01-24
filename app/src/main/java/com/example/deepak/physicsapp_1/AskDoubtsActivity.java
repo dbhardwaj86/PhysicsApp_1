@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class AskDoubtsActivity extends AppCompatActivity {
 
     private final String TAG = "PApp AskDoubtsActivity";
@@ -15,14 +17,21 @@ public class AskDoubtsActivity extends AppCompatActivity {
     private ImageButton mAddDoubt;
     private ImageButton mLeftDoubt;
     private ImageButton mRightDoubt;
+    private ImageButton mLogOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        final FirebaseAuth mAuth;
+        mAuth = FirebaseAuth.getInstance();
+       // Log.d("Papp2", mAuth.getCurrentUser().toString());
 
-        Intent myIntent = new Intent(getApplicationContext(), SigninActivity.class);
-        startActivity(myIntent);
+        if(mAuth.getCurrentUser() == null) {
+            Intent myIntent = new Intent(getApplicationContext(), SigninActivity.class);
+            startActivity(myIntent);
+            finish();
+        }
 
         setContentView(R.layout.activity_ask_doubts);
         Log.d(TAG, "Ask Doubts activity started");
@@ -30,6 +39,7 @@ public class AskDoubtsActivity extends AppCompatActivity {
         mAddDoubt = (ImageButton)findViewById(R.id.add_button);
         mLeftDoubt = (ImageButton) findViewById(R.id.left_doubt);
         mRightDoubt = (ImageButton) findViewById(R.id.right_doubt);
+        mLogOutButton = (ImageButton) findViewById(R.id.logOutButton);
 
         mAddDoubt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +59,16 @@ public class AskDoubtsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"Right Doubt clicked");
+            }
+        });
+        mLogOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent logOutIntent;
+                logOutIntent = new Intent(AskDoubtsActivity.this, MainActivity.class);
+                startActivity(logOutIntent);
+                finish();
             }
         });
 

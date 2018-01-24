@@ -46,6 +46,8 @@ public class RegisterActivity extends AppCompatActivity {
         loginScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent loginIntent = new Intent(RegisterActivity.this, SigninActivity.class);
+                startActivity(loginIntent);
                 finish();
             }
         });
@@ -66,9 +68,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 if(task.isSuccessful()){
                                     Log.d("PApp", "Registration successful");
                                     String user_id = mAuth.getCurrentUser().getUid();
+                                    //mAuth.getCurrentUser().updateProfile().then(function(){}).catch(function(error){});
                                     DatabaseReference current_DB = mDatabaseReference.child(user_id);
                                     current_DB.child("Name").setValue(name_content);
                                     startActivity(new Intent(RegisterActivity.this, SigninActivity.class));
+                                   // finish();
 
                                 }else
                                 {
